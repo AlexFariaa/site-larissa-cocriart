@@ -1,0 +1,241 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Variables ──────────────────────────────────────── */
+:root {
+  /* Palette */
+  --color-bg:     #2d0e44;
+  --color-purple: #6d1f8d;
+  --color-lilac:  #d29ee1;
+  --color-orange: #c56428;
+  --color-blue:   #4187af;
+  --color-white:  #ffffff;
+
+  /* Typography (populated by next/font via layout.tsx) */
+  --font-heading:   var(--font-heading-var,   Georgia, serif);
+  --font-signature: var(--font-signature-var, cursive);
+  --font-body:      var(--font-body-var,      system-ui, sans-serif);
+}
+
+/* ── Reset ──────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Custom Scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-purple);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-lilac);
+}
+
+/* ── Noise Overlay ──────────────────────────────────────── */
+/*
+ * Subtle grain texture via inline SVG + feTurbulence.
+ * pointer-events: none ensures it never blocks interactions.
+ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  opacity: 0.04;
+}
+
+/* All direct body children render above the noise overlay */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Custom Cursor ──────────────────────────────────────── */
+/*
+ * Hide native cursor on fine-pointer devices when JS adds the class.
+ * Restored automatically on Tab keydown (see CustomCursor.tsx).
+ */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
+}
+
+/* ── Aurora Layers (Hero) ───────────────────────────────── */
+/*
+ * Three independently animated radial gradient blobs.
+ * Layer 1 (purple)  — 16s slow drift
+ * Layer 2 (blue)    — 11s medium drift
+ * Layer 3 (base)    — 8s background gradient shift (existing aurora speed)
+ */
+.aurora-layer-1 {
+  background: radial-gradient(ellipse 85% 65% at 15% 55%, #6d1f8d 0%, transparent 65%);
+  opacity: 0.22;
+  animation: aurora1 16s ease-in-out infinite;
+}
+
+.aurora-layer-2 {
+  background: radial-gradient(ellipse 70% 55% at 85% 30%, #4187af 0%, transparent 60%);
+  opacity: 0.14;
+  animation: aurora2 11s ease-in-out infinite;
+}
+
+.aurora-layer-3 {
+  background: linear-gradient(135deg, #2d0e44, #6d1f8d, #4187af, #2d0e44);
+  background-size: 300% 300%;
+  opacity: 0.28;
+  animation: aurora3 8s ease infinite;
+}
+
+@keyframes aurora1 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  35%       { transform: translate(12%, -6%) scale(1.12); }
+  70%       { transform: translate(-8%, 9%) scale(0.93); }
+}
+
+@keyframes aurora2 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  42%       { transform: translate(-14%, 7%) scale(1.18); }
+  75%       { transform: translate(6%, -11%) scale(0.88); }
+}
+
+@keyframes aurora3 {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+/* ── Blog Prose ─────────────────────────────────────────── */
+.prose-cocriart {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.prose-cocriart h2,
+.prose-cocriart h3 {
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose-cocriart h2 {
+  font-size: clamp(1.75rem, 2vw + 1rem, 2.5rem);
+}
+
+.prose-cocriart h3 {
+  font-size: clamp(1.4rem, 1.3vw + 1rem, 1.8rem);
+}
+
+.prose-cocriart p,
+.prose-cocriart li {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-body);
+  line-height: 1.9;
+  margin-bottom: 1rem;
+}
+
+.prose-cocriart ul,
+.prose-cocriart ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-cocriart a {
+  color: #d29ee1;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.prose-cocriart a:hover {
+  color: #ffffff;
+}
+
+.prose-cocriart blockquote {
+  border-left: 4px solid #c56428;
+  background: rgba(26, 8, 41, 0.95);
+  border-radius: 0 16px 16px 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.prose-cocriart img {
+  width: 100%;
+  border-radius: 1rem;
+  margin: 1.5rem 0;
+}
+
+.prose-cocriart strong {
+  color: #d29ee1;
+}
+
+.prose-cocriart code {
+  background: rgba(26, 8, 41, 0.95);
+  color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.95em;
+}
+
+.prose-cocriart pre {
+  background: rgba(26, 8, 41, 0.95);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.prose-cocriart pre code {
+  background: transparent;
+  padding: 0;
+}
